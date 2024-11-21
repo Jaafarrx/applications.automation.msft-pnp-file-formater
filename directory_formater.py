@@ -18,22 +18,23 @@ def find_largest_number(remote_server) -> int:
     return largest_number
 
 
-def directory_formater(logs_dir, remote_server) -> bool:
-    result = False
-    largest_number = find_largest_number(remote_server)
+def create_new_results_directory(remote_server) -> Path:
+    try:
+        largest_number = find_largest_number(remote_server)
 
-    if largest_number == -1:
-        print("Failed to find largest file number")
-        return result
-    else:
-        print(f"Largest file found: {largest_number}")
+        if largest_number == -1:
+            raise FileNotFoundError(f"Failed to find largest file number")
+        else:
+            print(f"Largest file found: {largest_number}")
+    except Exception as e:
+        print(f"{e}")
+        exit(1)
 
     new_file_number = largest_number + 1
     template_dir = Path(fr"{remote_server}\_template_ryne_latest")
 
     try:
         if template_dir.is_dir():
-            print("template dir found!")
             print(f"template dir: {template_dir}")
         else:
             raise FileNotFoundError(f"Template directory '{template_dir}' not found!")
@@ -41,8 +42,15 @@ def directory_formater(logs_dir, remote_server) -> bool:
         print(f"An error occurred: {e}")
         exit(1)
 
+    new_dir = Path(f"{new_file_number}")
+    try:
+        shutil.copytree(template_dir, new_dir)
+        print(f"Template directory copied to {new_dir}")
+    except Exception as e:
+        print(f"An error occurred while copying the template directory: {e}")
+        exit(1)
 
-    return result
+    return new_dir
 
 
 if __name__  == "__main__":
@@ -58,8 +66,5 @@ if __name__  == "__main__":
         print("make sure to add the logs directory to the same dir as this code.")
         exit(1)
 
-    result = directory_formater(logs_dir, remote_server)
-    if result:
-        print("Conversion Succeeded!")
-    else:
-        print("Conversion Failed!")
+    new_dir = create_new_results_directory(remote_server)
+
