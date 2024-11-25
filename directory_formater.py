@@ -182,8 +182,74 @@ def move_files_to_new_dir(logs_dir, new_dir):
     pattern = r"cpu2017-\d{1}.\d{1}.\d{1}_fprate.zip"
     file_to_move = find_file_with_regex(directory, pattern)
     if file_to_move:
+            destination = spec_cpu_sfp_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"speccpu-fprate.csv"
+    file_to_move = find_file_with_regex(directory, pattern)
+    if file_to_move:
+            destination = spec_cpu_sfp_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"speccpu-fprate_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
+    file_to_move = find_file_with_regex(directory, pattern)
+    if file_to_move:
+            destination = spec_cpu_sfp_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"speccpu-intrate.csv"
+    file_to_move = find_file_with_regex(directory, pattern)
+    if file_to_move:
             destination = spec_cpu_sir_destination / file_to_move.name
             move_file(file_to_move, destination)
+
+    pattern = r"speccpu-intrate_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
+    file_to_move = find_file_with_regex(directory, pattern)
+    if file_to_move:
+            destination = spec_cpu_sir_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"stream.csv"
+    file_to_move = find_file_with_regex(directory, pattern)
+    if file_to_move:
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"stream_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
+    file_to_move = find_file_with_regex(directory, pattern)
+    if file_to_move:
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"stream_add.csv"
+    file_to_move = find_file_with_regex(parse_directory, pattern)
+    if file_to_move:
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"stream_copy.csv"
+    file_to_move = find_file_with_regex(parse_directory, pattern)
+    if file_to_move:
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"stream_scale.csv"
+    file_to_move = find_file_with_regex(parse_directory, pattern)
+    if file_to_move:
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    pattern = r"stream_triad.csv"
+    file_to_move = find_file_with_regex(parse_directory, pattern)
+    if file_to_move:
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+    for file in os.listdir(directory):
+        file_to_move = find_file_with_regex(directory, file)
+        destination = miscellaneous_destination / file_to_move.name
+        move_file(file_to_move, destination)
+
 
 if __name__  == "__main__":
     remote_server = r"\\10.54.112.76\e\MSFT"
