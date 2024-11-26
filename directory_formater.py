@@ -91,6 +91,13 @@ def find_largest_run_number(directory) -> int:
 
 
 def move_files_to_new_dir(logs_dir, new_dir):
+    run_mlc_created = False
+    run_hpl_created  = False
+    run_spec_cpu_sir_created  = False
+    run_spec_cpu_sfp_created  = False
+    run_stream_created  = False
+    run_miscellaneous_created  = False
+
     directory = logs_dir / 'output'
     parse_directory = logs_dir / 'output' / 'parse'
 
@@ -115,24 +122,6 @@ def move_files_to_new_dir(logs_dir, new_dir):
     stream_destination = stream_destination / f"run{run_number}"
     miscellaneous_destination = miscellaneous_destination / f"run{run_number}"
 
-    mlc_destination = Path(mlc_destination)
-    mlc_destination.mkdir(parents=True, exist_ok=True)
-
-    hpl_destination = Path(hpl_destination)
-    hpl_destination.mkdir(parents=True, exist_ok=True)
-
-    spec_cpu_sir_destination = Path(spec_cpu_sir_destination)
-    spec_cpu_sir_destination.mkdir(parents=True, exist_ok=True)
-
-    spec_cpu_sfp_destination = Path(spec_cpu_sfp_destination)
-    spec_cpu_sfp_destination.mkdir(parents=True, exist_ok=True)
-
-    stream_destination = Path(stream_destination)
-    stream_destination.mkdir(parents=True, exist_ok=True)
-
-    miscellaneous_destination = Path(miscellaneous_destination)
-    miscellaneous_destination.parent.mkdir(parents=True, exist_ok=True)
-    miscellaneous_destination.mkdir(parents=True, exist_ok=True)
 
     if file_to_move:
         destination = str(new_dir / file_to_move.name)
@@ -142,6 +131,10 @@ def move_files_to_new_dir(logs_dir, new_dir):
         pattern = r"mlc.csv"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
+            if not run_mlc_created:
+                mlc_destination = Path(mlc_destination)
+                mlc_destination.mkdir(parents=True, exist_ok=True)
+                run_mlc_created = True
             destination = mlc_destination / file_to_move.name
             move_file(file_to_move, destination)
 
@@ -149,6 +142,10 @@ def move_files_to_new_dir(logs_dir, new_dir):
         pattern = r"mlc_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
+            if not run_mlc_created:
+                mlc_destination = Path(mlc_destination)
+                mlc_destination.mkdir(parents=True, exist_ok=True)
+                run_mlc_created = True
             destination = mlc_destination / file_to_move.name
             move_file(file_to_move, destination)
 
@@ -156,69 +153,113 @@ def move_files_to_new_dir(logs_dir, new_dir):
         pattern = r"linpack_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
-                destination = hpl_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_hpl_created:
+                hpl_destination = Path(hpl_destination)
+                hpl_destination.mkdir(parents=True, exist_ok=True)
+                run_hpl_created = True
+            destination = hpl_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
         pattern = r"linpack.csv"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
-                destination = hpl_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_hpl_created:
+                hpl_destination = Path(hpl_destination)
+                hpl_destination.mkdir(parents=True, exist_ok=True)
+                run_hpl_created = True
+            destination = hpl_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
 
 
         pattern = r"cpu2017-\d{1}.\d{1}.\d{1}_intrate.zip"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
-                destination = spec_cpu_sir_destination / file_to_move.name
-                move_file(file_to_move, destination)
-
-        pattern = r"cpu2017-\d{1}.\d{1}.\d{1}_fprate.zip"
-        file_to_move = find_file_with_regex(directory, pattern)
-        if file_to_move:
-                destination = spec_cpu_sfp_destination / file_to_move.name
-                move_file(file_to_move, destination)
-
-        pattern = r"speccpu-fprate.csv"
-        file_to_move = find_file_with_regex(directory, pattern)
-        if file_to_move:
-                destination = spec_cpu_sfp_destination / file_to_move.name
-                move_file(file_to_move, destination)
-
-        pattern = r"speccpu-fprate_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
-        file_to_move = find_file_with_regex(directory, pattern)
-        if file_to_move:
-                destination = spec_cpu_sfp_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_spec_cpu_sir_created:
+                spec_cpu_sir_destination = Path(spec_cpu_sir_destination)
+                spec_cpu_sir_destination.mkdir(parents=True, exist_ok=True)
+                run_spec_cpu_sir_created = True
+            destination = spec_cpu_sir_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
         pattern = r"speccpu-intrate.csv"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
-                destination = spec_cpu_sir_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_spec_cpu_sir_created:
+                spec_cpu_sir_destination = Path(spec_cpu_sir_destination)
+                spec_cpu_sir_destination.mkdir(parents=True, exist_ok=True)
+                run_spec_cpu_sir_created = True
+            destination = spec_cpu_sir_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
         pattern = r"speccpu-intrate_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
-                destination = spec_cpu_sir_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_spec_cpu_sir_created:
+                spec_cpu_sir_destination = Path(spec_cpu_sir_destination)
+                spec_cpu_sir_destination.mkdir(parents=True, exist_ok=True)
+                run_spec_cpu_sir_created = True
+            destination = spec_cpu_sir_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+        pattern = r"cpu2017-\d{1}.\d{1}.\d{1}_fprate.zip"
+        file_to_move = find_file_with_regex(directory, pattern)
+        if file_to_move:
+            if not run_spec_cpu_sfp_created:
+                spec_cpu_sfp_destination = Path(spec_cpu_sfp_destination)
+                spec_cpu_sfp_destination.mkdir(parents=True, exist_ok=True)
+                run_spec_cpu_sfp_created = True
+            destination = spec_cpu_sfp_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+        pattern = r"speccpu-fprate.csv"
+        file_to_move = find_file_with_regex(directory, pattern)
+        if file_to_move:
+            if not run_spec_cpu_sfp_created:
+                spec_cpu_sfp_destination = Path(spec_cpu_sfp_destination)
+                spec_cpu_sfp_destination.mkdir(parents=True, exist_ok=True)
+                run_spec_cpu_sfp_created = True
+            destination = spec_cpu_sfp_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+        pattern = r"speccpu-fprate_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
+        file_to_move = find_file_with_regex(directory, pattern)
+        if file_to_move:
+            if not run_spec_cpu_sfp_created:
+                spec_cpu_sfp_destination = Path(spec_cpu_sfp_destination)
+                spec_cpu_sfp_destination.mkdir(parents=True, exist_ok=True)
+                run_spec_cpu_sfp_created = True
+            destination = spec_cpu_sfp_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
         pattern = r"stream.csv"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
-                destination = stream_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_stream_created:
+                stream_destination = Path(stream_destination)
+                stream_destination.mkdir(parents=True, exist_ok=True)
+                run_stream_created = True
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
         pattern = r"stream_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
         file_to_move = find_file_with_regex(directory, pattern)
         if file_to_move:
-                destination = stream_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_stream_created:
+                stream_destination = Path(stream_destination)
+                stream_destination.mkdir(parents=True, exist_ok=True)
+                run_stream_created = True
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
     if parse_directory.exists():
         pattern = r"linpack.csv"
         file_to_move = find_file_with_regex(parse_directory, pattern)
         if file_to_move:
+            if not run_hpl_created:
+                hpl_destination = Path(hpl_destination)
+                hpl_destination.mkdir(parents=True, exist_ok=True)
+                run_hpl_created = True
             destination = hpl_destination / 'parse' / file_to_move.name
             destination = Path(destination)
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -227,29 +268,50 @@ def move_files_to_new_dir(logs_dir, new_dir):
         pattern = r"stream_add.csv"
         file_to_move = find_file_with_regex(parse_directory, pattern)
         if file_to_move:
-                destination = stream_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_stream_created:
+                stream_destination = Path(stream_destination)
+                stream_destination.mkdir(parents=True, exist_ok=True)
+                run_stream_created = True
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
         pattern = r"stream_copy.csv"
         file_to_move = find_file_with_regex(parse_directory, pattern)
         if file_to_move:
-                destination = stream_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_stream_created:
+                stream_destination = Path(stream_destination)
+                stream_destination.mkdir(parents=True, exist_ok=True)
+                run_stream_created = True
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
         pattern = r"stream_scale.csv"
         file_to_move = find_file_with_regex(parse_directory, pattern)
         if file_to_move:
-                destination = stream_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_stream_created:
+                stream_destination = Path(stream_destination)
+                stream_destination.mkdir(parents=True, exist_ok=True)
+                run_stream_created = True
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
         pattern = r"stream_triad.csv"
         file_to_move = find_file_with_regex(parse_directory, pattern)
         if file_to_move:
-                destination = stream_destination / file_to_move.name
-                move_file(file_to_move, destination)
+            if not run_stream_created:
+                stream_destination = Path(stream_destination)
+                stream_destination.mkdir(parents=True, exist_ok=True)
+                run_stream_created = True
+            destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
     if directory.exists():
         for file in os.listdir(directory):
+            if not run_miscellaneous_created:
+                miscellaneous_destination = Path(miscellaneous_destination)
+                miscellaneous_destination.parent.mkdir(parents=True, exist_ok=True)
+                miscellaneous_destination.mkdir(parents=True, exist_ok=True)
+                run_miscellaneous_created = True
             file_to_move = find_file_with_regex(directory, file)
             destination = miscellaneous_destination / file_to_move.name
             move_file(file_to_move, destination)
