@@ -97,6 +97,7 @@ def move_files_to_new_dir(logs_dir, new_dir):
     run_spec_cpu_sir_created  = False
     run_spec_cpu_sfp_created  = False
     run_stream_created  = False
+    run_specpower_created = False
     run_miscellaneous_created  = False
 
     directory = logs_dir / 'output'
@@ -109,6 +110,7 @@ def move_files_to_new_dir(logs_dir, new_dir):
     spec_cpu_sir_destination = new_dir / 'snc3' / 'linux' / 'spec2017-1.0.2-GCC8.1-O2' / 'sir'
     spec_cpu_sfp_destination = new_dir / 'snc3' / 'linux' / 'spec2017-1.0.2-GCC8.1-O2' / 'sfp'
     stream_destination = new_dir / 'snc3' / 'linux' / 'stream'
+    specpower_destination = new_dir / 'snc3' / 'linux' / 'specpower'
     miscellaneous_destination = new_dir / 'snc3' / 'linux' / 'miscellaneous'
 
 
@@ -122,6 +124,7 @@ def move_files_to_new_dir(logs_dir, new_dir):
     spec_cpu_sir_destination = spec_cpu_sir_destination / f"run{run_number}"
     spec_cpu_sfp_destination = spec_cpu_sfp_destination / f"run{run_number}"
     stream_destination = stream_destination / f"run{run_number}"
+    specpower_destination = specpower_destination / f"run{run_number}"
     miscellaneous_destination = miscellaneous_destination / f"run{run_number}"
 
     if file_to_move:
@@ -311,6 +314,46 @@ def move_files_to_new_dir(logs_dir, new_dir):
                 stream_destination.mkdir(parents=True, exist_ok=True)
                 run_stream_created = True
             destination = stream_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+        pattern = r"ssj.\d{4}"
+        file_to_move = find_file_with_regex(directory, pattern)
+        if file_to_move:
+            if not run_specpower_created:
+                specpower_destination = Path(specpower_destination)
+                specpower_destination.mkdir(parents=True, exist_ok=True)
+                run_specpower_created = True
+            destination = specpower_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+        pattern = r"specpower.csv"
+        file_to_move = find_file_with_regex(directory, pattern)
+        if file_to_move:
+            if not run_specpower_created:
+                specpower_destination = Path(specpower_destination)
+                specpower_destination.mkdir(parents=True, exist_ok=True)
+                run_specpower_created = True
+            destination = specpower_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+        pattern = r"specpower_jvm.log"
+        file_to_move = find_file_with_regex(directory, pattern)
+        if file_to_move:
+            if not run_specpower_created:
+                specpower_destination = Path(specpower_destination)
+                specpower_destination.mkdir(parents=True, exist_ok=True)
+                run_specpower_created = True
+            destination = specpower_destination / file_to_move.name
+            move_file(file_to_move, destination)
+
+        pattern = r"specpower_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}\.log"
+        file_to_move = find_file_with_regex(directory, pattern)
+        if file_to_move:
+            if not run_specpower_created:
+                specpower_destination = Path(specpower_destination)
+                specpower_destination.mkdir(parents=True, exist_ok=True)
+                run_specpower_created = True
+            destination = specpower_destination / file_to_move.name
             move_file(file_to_move, destination)
 
     if directory.exists():
