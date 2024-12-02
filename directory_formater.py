@@ -91,6 +91,7 @@ def find_largest_run_number(directory) -> int:
 
 
 def move_files_to_new_dir(logs_dir, new_dir):
+    run_log_created = False
     run_mlc_created = False
     run_hpl_created  = False
     run_spec_cpu_sir_created  = False
@@ -115,6 +116,7 @@ def move_files_to_new_dir(logs_dir, new_dir):
 
     print(f"Current run is: {run_number}")
 
+    log_destination = new_dir / 'log' / f"run{run_number}"
     mlc_destination = mlc_destination / f"run{run_number}"
     hpl_destination = hpl_destination / f"run{run_number}"
     spec_cpu_sir_destination = spec_cpu_sir_destination / f"run{run_number}"
@@ -122,10 +124,16 @@ def move_files_to_new_dir(logs_dir, new_dir):
     stream_destination = stream_destination / f"run{run_number}"
     miscellaneous_destination = miscellaneous_destination / f"run{run_number}"
 
-
     if file_to_move:
-        destination = str(new_dir / file_to_move.name)
-        move_file(file_to_move, destination)
+        for file in os.listdir(file_to_move):
+            if not run_log_created:
+                log_destination = Path(log_destination)
+                log_destination.mkdir(parents=True, exist_ok=True)
+                run_lod_created = True
+
+            file_to_move = find_file_with_regex(file_to_move, file)
+            destination = log_destination / file_to_move.name
+            move_file(file_to_move, destination)
 
     if directory.exists():
         pattern = r"mlc.csv"
